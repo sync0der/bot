@@ -1,8 +1,10 @@
 package uz.giza.bot.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uz.giza.bot.entity.User;
+import uz.giza.bot.entity.UserPaymentStatus;
 import uz.giza.bot.repository.UserRepository;
 import uz.giza.bot.service.input.InputContainer;
 import uz.giza.bot.service.input.UserStates;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Async
     public void save(User user) {
         userRepository.save(user);
     }
@@ -46,6 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Async
     public void deleteById(Long userId) {
         userRepository.deleteById(userId);
     }
@@ -65,6 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Async
     public void save(Long chatId, String username, String fullName, UserStates userState, String utmTag) {
         InputContainer.setUserState(chatId, userState);
         save(User.builder()
@@ -74,6 +79,27 @@ public class UserServiceImpl implements UserService {
                 .userState(userState)
                 .utmTag(utmTag)
                 .build());
+    }
+
+    @Override
+    @Async
+    public void addPhotoUrl(Long chatId, String photoUrl) {
+        User user = get(chatId);
+        if (user.getPhotosUrl() == null) {
+            user.setPhotosUrl(List.of(photoUrl));
+        } else
+            user.getPhotosUrl().add(photoUrl);
+        save(user);
+    }
+
+    @Override
+    public List<User> getAllPayedUsers(UserPaymentStatus userPaymentStatus) {
+        return userRepository.findAllByStatus(userPaymentStatus);
+    }
+
+    @Override
+    public List<User> getAllWithUndefinedPhoneNumber() {
+        return userRepository.findUsersWithInvalidPhoneNumber();
     }
 
 //    @Override

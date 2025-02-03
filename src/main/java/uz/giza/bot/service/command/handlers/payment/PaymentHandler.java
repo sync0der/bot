@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import uz.giza.bot.entity.User;
 import uz.giza.bot.service.UserService;
+import uz.giza.bot.service.callback.CallbackName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,8 @@ public class PaymentHandler {
         List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
         List<InlineKeyboardButton> rowInLine = new ArrayList<>();
         rowInLine.add(InlineKeyboardButton.builder()
-                .text("To'lash")
-                .url(url)
+                .text(CallbackName.PAYMENT_CARD.getCommandName())
+                .callbackData(CallbackName.PAYMENT_CARD.getCommandName())
                 .build()
         );
         rowsInLine.add(rowInLine);
@@ -31,16 +32,17 @@ public class PaymentHandler {
     public String getMessage(Long chatId) {
         User user = userService.get(chatId);
         return String.format("""
-                <b>To'lov</b>
-                
-                To'lovchi haqida ma'lumotlar:
-                - <b><i>%s</i></b>
-                - <b><i>%s</i></b>
-                
-                Kurs nomi: <b><i>%s</i></b>
-                
-                Summa: <b><i>%d so'm</i></b>
-                """, user.getFullName(), user.getPhoneNumber(), user.getTargetCourse().getName(),
+                        <b>To'lov</b>
+                        
+                        To'lovchi haqida ma'lumotlar:
+                        - <b><i>%s</i></b>
+                        - <b><i>%s</i></b>
+                        
+                        Kurs nomi: 
+                        <b><i>%s</i></b>
+                        
+                        Summa: <b><i>%d so'm</i></b>
+                        """, user.getFullName(), user.getPhoneNumber(), user.getTargetCourse().getName(),
                 user.getTargetCourse().getPrice());
     }
 }

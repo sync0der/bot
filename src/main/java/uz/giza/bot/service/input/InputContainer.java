@@ -1,6 +1,7 @@
 package uz.giza.bot.service.input;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.giza.bot.entity.User;
@@ -23,6 +24,7 @@ public class InputContainer {
         userStates.put(chatId, state);
     }
 
+    @Async
     public void handleInput(Update update) {
         Long chatId = update.getMessage().getChatId();
         UserStates userState = userStates.get(chatId);
@@ -30,6 +32,7 @@ public class InputContainer {
         inputHandler.execute(update);
     }
 
+    @Async
     public void initializeUserStates() {
         userStates.putAll(
                 userService.getAll()

@@ -3,6 +3,7 @@ package uz.giza.bot.admin.storage;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -20,6 +21,7 @@ import java.util.List;
 public class UserReportHandler {
     private final SendMessageService sendMessageService;
 
+    @Async
     public void sendUserReport(Long chatId, String fileName, String caption, byte[] data) {
         File tempFile;
         try {
@@ -52,7 +54,7 @@ public class UserReportHandler {
             Sheet sheet = workbook.createSheet(sheetName);
 
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"№", "Ism", "Telefon raqam", "Username", "Chat_Id", "Utm tag", "Target course", "Registratsiya vaqti"};
+            String[] columns = {"№", "Ism", "Telefon raqam", "Username", "Chat_Id", "Utm tag", "Status", "Target course", "Registratsiya vaqti"};
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -72,8 +74,9 @@ public class UserReportHandler {
                 row.createCell(3).setCellValue(user.getUserName());
                 row.createCell(4).setCellValue(user.getChatId());
                 row.createCell(5).setCellValue(user.getUtmTag());
-                row.createCell(6).setCellValue(targetCourse);
-                row.createCell(7, CellType.NUMERIC).setCellValue(user.getRegisteredAt());
+                row.createCell(6).setCellValue(user.getStatus().toString());
+                row.createCell(7).setCellValue(targetCourse);
+                row.createCell(8).setCellValue(user.getRegisteredAt().toString());
             }
 
             workbook.write(outputStream);

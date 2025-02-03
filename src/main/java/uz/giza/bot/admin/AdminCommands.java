@@ -16,6 +16,8 @@ public enum AdminCommands {
     SORT_USERS("Сортировать"),
     SORT_USERS_BY_UTM("Сортировать по UTM"),
     SORT_USERS_BY_COURSE("Сортировать по курсам"),
+    ALL_PAYMENTS("Оплатившие"),
+    PROCESS_PHONE_NUMBER("Обработать номера"),
     SORT_USERS_BY_PURCHASE("Сортировать по опталам");
     private final String commandName;
 }

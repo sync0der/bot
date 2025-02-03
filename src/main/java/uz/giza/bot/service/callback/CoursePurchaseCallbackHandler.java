@@ -2,41 +2,41 @@ package uz.giza.bot.service.callback;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import uz.giza.bot.service.SendMessageService;
 import uz.giza.bot.service.UserService;
+import uz.giza.bot.service.command.CommandMapping;
 import uz.giza.bot.service.command.CommandName;
-import uz.giza.bot.service.command.handlers.Handler;
+import uz.giza.bot.service.command.handlers.CommandHandler;
 import uz.giza.bot.service.input.UserStates;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.List;
 
 
 @Service
-@CallbackMapping(value = CallbackName.BUY_COURSE)
+//@CallbackMapping(value = CallbackName.BUY_COURSE
+@CommandMapping(values = {CommandName.PURCHASE})
 @Slf4j
 @RequiredArgsConstructor
-public class CoursePurchaseCallbackHandler implements CallbackHandler, Handler {
+public class CoursePurchaseCallbackHandler implements CommandHandler {
     private final SendMessageService sendMessageService;
-    private final FileService fileService;
     private final UserService userService;
 
-
     @Override
+    @Async
     public void execute(Update update) {
-
         Long chatId = update.hasCallbackQuery()
                 ? update.getCallbackQuery().getMessage().getChatId()
                 : update.getMessage().getChatId();
-        sendDocument(chatId);
-        sendMessageService.sendMessageWithReplyKeyboard(chatId, createReplyKeyboardMarkup(), "Quyidagi oferta bilan tanishib chiqing va tasdiqlash tugmasini bosing.");
+        sendMessageService.sendFile(chatId, FileService.OFFER_FILE_KEY, "ommaviy_oferta.docx");
+        String message = String.format("""
+                📜 Quyidagi oferta bilan tanishib chiqing va <code>%s</code> tugmasini bosing.
+                """, CommandName.CONFIRM.getCommandName());
+        sendMessageService.sendMessageWithReplyKeyboard(chatId, createReplyKeyboardMarkup(), message);
         userService.updateUserState(chatId, UserStates.BACK_TO_COURSE_LIST);
 
     }
@@ -53,16 +53,6 @@ public class CoursePurchaseCallbackHandler implements CallbackHandler, Handler {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(List.of(row1, row2));
         keyboardMarkup.setResizeKeyboard(true);
         return keyboardMarkup;
-    }
-
-
-    public void sendDocument(Long chatId) {
-        InputStream fileStream = new ByteArrayInputStream(fileService.getFileData());
-        SendDocument document = SendDocument.builder()
-                .chatId(chatId)
-                .document(new InputFile(fileStream, "offer.pdf"))
-                .build();
-        sendMessageService.sendFile(document);
     }
 
 

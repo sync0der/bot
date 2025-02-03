@@ -28,7 +28,7 @@ public class UzumPaymentHandler implements CommandHandler {
                 chatId,
                 paymentHandler.createInlineKeyboard("https://t.me/+998996441708"),
                 paymentHandler.getMessage(chatId));
-        mainCommandHandler.execute(update);
+//        mainCommandHandler.execute(update);
 
     }
 

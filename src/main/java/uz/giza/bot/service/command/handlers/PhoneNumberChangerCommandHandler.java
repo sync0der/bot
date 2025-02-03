@@ -1,6 +1,7 @@
 package uz.giza.bot.service.command.handlers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -24,12 +25,17 @@ public class PhoneNumberChangerCommandHandler implements CommandHandler {
 
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         User user = userService.updateUserState(chatId, UserStates.WAITING_FOR_PHONE_NUMBER);
-        String message = String.format("\uD83D\uDCCC Sizning telefon raqamingiz: %s \uD83D\uDCCC\n\n" +
-                "Yangi telefon raqamingizni yuboring!\n" +
-                "Jarayonni bekor qilish uchun \"\uD83D\uDD19 Ortga\" tugmasini bosing.", user.getPhoneNumber());
+        String message = String.format("""
+                📌 <b>Sizning telefon raqamingiz:</b> <code>%s</code>
+                
+                📲 <b>Yangi telefon raqamingizni yuboring!</b>
+                
+                ❌ Jarayonni bekor qilish uchun <b>🔙 "Ortga"</b> tugmasini bosing.
+                """, user.getPhoneNumber());
         sendPhoneNumberRequest(chatId, message);
 
     }

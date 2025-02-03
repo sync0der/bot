@@ -2,6 +2,7 @@ package uz.giza.bot.service.input.handlers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.giza.bot.entity.User;
@@ -23,6 +24,7 @@ public class NameInputHandler implements InputHandler {
     private final PhoneNumberInputHandler phoneNumberInputHandler;
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         String input = update.getMessage().getText();
@@ -36,7 +38,7 @@ public class NameInputHandler implements InputHandler {
                 sendMessageService.sendMessage(chatId, "Iltimos ism-sharifingizni bo'sh joy bilan ajaratib yozing!");
             } else {
                 if (user.getFullName() != null) {
-                    sendMessageService.sendMessage(chatId, "Sizning ismingiz muvaffaqiyatli o'zgartirildi!");
+                    sendMessageService.sendMessage(chatId, "✅ Sizning ismingiz muvaffaqiyatli o'zgartirildi!");
                     settingsInputHandler.execute(update);
                     user.setFullName(input);
                     userService.updateUserState(user, UserStates.DEFAULT);

@@ -46,9 +46,17 @@ public class User {
     @Column(name = "registered_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP(0)")
     private LocalDateTime registeredAt;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private UserPaymentStatus status = UserPaymentStatus.DECLINED;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Course targetCourse;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_photos", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "photo_url")
+    private List<String> photosUrl;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

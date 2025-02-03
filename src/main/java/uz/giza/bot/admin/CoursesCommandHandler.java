@@ -1,6 +1,7 @@
 package uz.giza.bot.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -21,6 +22,7 @@ public class CoursesCommandHandler implements AdminHandler {
     private final SendMessageService sendMessageService;
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         sendMessageService.sendMessageWithReplyKeyboard(chatId, createInlineKeyboardMarkup(), "Выберите нужный курс:");

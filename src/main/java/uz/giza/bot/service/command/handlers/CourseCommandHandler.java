@@ -1,6 +1,7 @@
 package uz.giza.bot.service.command.handlers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -26,6 +27,7 @@ public class CourseCommandHandler implements CommandHandler {
     private final UserService userService;
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         sendMessageService.sendMessageWithReplyKeyboard(chatId, createReplyKeyboardMarkup(), "Kursni tanlang");
@@ -51,7 +53,7 @@ public class CourseCommandHandler implements CommandHandler {
 
     private ReplyKeyboardMarkup createReplyKeyboardMarkup() {
         KeyboardRow row1 = new KeyboardRow();
-        row1.add("\uD83D\uDD19 Ortga");
+        row1.add(CommandName.BACK.getCommandName());
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(List.of(row1));
         keyboardMarkup.setResizeKeyboard(true);
         return keyboardMarkup;

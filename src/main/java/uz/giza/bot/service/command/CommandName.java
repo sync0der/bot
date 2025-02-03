@@ -10,14 +10,17 @@ public enum CommandName {
     MAIN("/main"),
     SUPPORT("Aloqa \uD83D\uDCDE"),
     SETTINGS("Sozlamalar ⚙\uFE0F"),
-    MENU("Asosiy menyu \uD83C\uDFE0"),
-    CHANGE_NAME("Ismni o'zgartirish 👤"),
-    CHANGE_PHONE_NUMBER("Telefon raqamni o'zgartirish 📞"),
+    MENU("\uD83C\uDFE0 Asosiy menyu"),
+    CHANGE_NAME("\uD83D\uDC64 Ismni o'zgartirish"),
+    CHANGE_PHONE_NUMBER("\uD83D\uDCDE Telefon raqamini o'zgartirish"),
     BACK("\uD83D\uDD19 Ortga"),
-    BUY_COURSE("Kursga yozilish \uD83D\uDCDD"),
+    BUY_COURSE("\uD83D\uDCDD Kursga yozilish"),
     CONFIRM("Tasdiqlayman"),
     CLICK_PAYMENT("Click"),
     PAYME_PAYMENT("Payme"),
-    UZUM_PAYMENT("Uzum");
+    TRANSFER("Kartaga o'tkazma"),
+    UZUM_PAYMENT("Uzum"),
+    PURCHASE("Kursga yozilish");
+
     private final String commandName;
 }

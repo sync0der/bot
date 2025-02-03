@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CallbackName {
     INFO("course"),
+    PAYMENT_CARD("To'lash"),
     BUY_COURSE("buy");
     private final String commandName;
 }

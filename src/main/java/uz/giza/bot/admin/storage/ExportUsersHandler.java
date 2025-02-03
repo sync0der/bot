@@ -1,6 +1,7 @@
 package uz.giza.bot.admin.storage;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.giza.bot.admin.AdminCommands;
@@ -19,6 +20,7 @@ public class ExportUsersHandler implements AdminHandler {
     private final UserService userService;
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         List<User> users = userService.getAll();

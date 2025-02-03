@@ -2,6 +2,7 @@ package uz.giza.bot.service.input.handlers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -29,6 +30,7 @@ public class PhoneNumberInputHandler implements InputHandler {
 
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         User user = userService.get(chatId);
@@ -39,7 +41,9 @@ public class PhoneNumberInputHandler implements InputHandler {
             settingsInputHandler.execute(update);
             userService.updateUserState(user, UserStates.DEFAULT);
         } else if (user.getPhoneNumber() != null && user.getPhoneNumber().equals(phoneNumber)) {
-            sendMessageService.sendMessage(chatId, "Bunday raqam bilan ro'yxatdan o'tilgan, boshqa telefon raqam kiriting");
+            sendMessageService.sendMessage(chatId, """
+                    📛 Ushbu raqam allaqachon ro'yxatdan o'tgan. Iltimos, boshqa telefon raqamini kiriting.
+                    """);
         } else if (user.getPhoneNumber() == null) {
             mainCommandHandler.execute(update);
             user.setPhoneNumber(phoneNumber);
@@ -65,8 +69,7 @@ public class PhoneNumberInputHandler implements InputHandler {
         ));
 
         replyKeyboardMarkup.setKeyboard(List.of(row));
-        sendMessageService.sendMessageWithReplyKeyboard(chatId, replyKeyboardMarkup, "Iltimos, telefon raqamingizni " +
-                "ulashing\\!");
+        sendMessageService.sendMessageWithReplyKeyboard(chatId, replyKeyboardMarkup, "\uD83D\uDCF2 Iltimos, telefon raqamingizni yuboring!");
     }
 
 

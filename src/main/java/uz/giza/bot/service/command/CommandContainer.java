@@ -2,6 +2,7 @@ package uz.giza.bot.service.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class CommandContainer {
     private final CommandFactory commandFactory;
 
+    @Async
     public void handleCommand(Update update) {
         String commandIdentifier = update.getMessage().getText();
         commandFactory.getCommand(commandIdentifier)

@@ -1,6 +1,7 @@
 package uz.giza.bot.service.command.handlers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.giza.bot.entity.User;
@@ -21,6 +22,7 @@ public class StartCommandHandler implements CommandHandler {
     private final PhoneNumberInputHandler phoneNumberInputHandler;
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         String utm = null;
@@ -30,7 +32,10 @@ public class StartCommandHandler implements CommandHandler {
         if (userService.userExists(chatId)) {
             mainCommandHandler.execute(update);
         } else {
-            sendMessageService.sendMessage(chatId, "Assalomu alaykum");
+            sendMessageService.sendMessage(chatId, """
+                    Assalomu alaykum, hurmatli foydalanuvchi! 😊
+                    Yulduz Mavlyanovaning botiga xush kelibsiz!
+                    """);
             phoneNumberInputHandler.sendPhoneNumberRequest(chatId);
             String fullName = update.getMessage().getFrom().getFirstName() + " " + update.getMessage().getFrom().getLastName();
             String userName = update.getMessage().getFrom().getUserName();

@@ -1,6 +1,7 @@
 package uz.giza.bot.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -16,6 +17,7 @@ public class UsersCommandHandler implements AdminHandler{
     private final SendMessageService sendMessageService;
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         sendMessageService.sendMessageWithReplyKeyboard(chatId, createReplyKeyboardMarkup(), "Выберите опции: ");

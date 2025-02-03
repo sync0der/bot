@@ -1,6 +1,7 @@
 package uz.giza.bot.service.command.handlers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -20,6 +21,7 @@ public class SupportInputHandler implements CommandHandler {
 
 
     @Override
+    @Async
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
 
@@ -27,7 +29,7 @@ public class SupportInputHandler implements CommandHandler {
                 <b>Menejer:</b> <i>%s</i>
                 
                 <b>Telefon raqami:</b> <i>%s</i>
-                """, "Diyorbek Nazarov", "+998996441708");
+                """, "Shamsiddin", "+998999810278");
         sendMessageService.sendMessageWithReplyKeyboard(chatId, createKeyboardMarkup(), message);
     }
 
@@ -37,7 +39,7 @@ public class SupportInputHandler implements CommandHandler {
         List<InlineKeyboardButton> rowInLine = new ArrayList<>();
         rowInLine.add(InlineKeyboardButton.builder()
                 .text("Telegram orqali bog'lanish")
-                .url("https://t.me/+998996441708")
+                .url("https://t.me/+998999810278")
                 .build()
         );
         rowsInLine.add(rowInLine);

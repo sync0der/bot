@@ -18,7 +18,7 @@ public class Course {
     @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 1000)
     private String description;
 
     @Column(name = "price")

@@ -1,10 +1,10 @@
 package uz.giza.bot.service.command.handlers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import uz.giza.bot.service.SendMessageService;
 import uz.giza.bot.service.command.CommandMapping;
@@ -19,19 +19,23 @@ public class MainCommandHandler implements CommandHandler {
     private final SendMessageService sendMessageService;
 
     @Override
+    @Async
     public void execute(Update update) {
         ReplyKeyboardMarkup keyboardMarkup = createKeyboardMarkup();
-        sendMessageService.sendMessageWithReplyKeyboard(update.getMessage().getChatId(), keyboardMarkup, "Asosiy menyu \uD83C\uDFE0");
+        Long chatId = update.hasCallbackQuery()
+                ? update.getCallbackQuery().getMessage().getChatId()
+                : update.getMessage().getChatId();
+
+        sendMessageService.sendMessageWithReplyKeyboard(chatId, keyboardMarkup, CommandName.MENU.getCommandName());
     }
 
     private ReplyKeyboardMarkup createKeyboardMarkup() {
         KeyboardRow row1 = new KeyboardRow();
-        row1.add("Kursga yozilish \uD83D\uDCDD");
-        row1.add("Mening xaridlarim \uD83D\uDECD");
+        row1.add(CommandName.BUY_COURSE.getCommandName());
 
         KeyboardRow row2 = new KeyboardRow();
-        row2.add("Aloqa \uD83D\uDCDE");
-        row2.add("Sozlamalar ⚙\uFE0F");
+        row2.add(CommandName.SUPPORT.getCommandName());
+        row2.add(CommandName.SETTINGS.getCommandName());
 
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(List.of(row1, row2));
